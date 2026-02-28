@@ -6,6 +6,15 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 export class AiController {
   constructor(private aiService: AiService) {}
 
+  /**
+   * 获取 AI 提供商信息
+   */
+  @Get('provider')
+  @UseGuards(JwtAuthGuard)
+  getProviderInfo() {
+    return this.aiService.getProviderInfo();
+  }
+
   @Post('marketing-copy')
   @UseGuards(JwtAuthGuard)
   async generateMarketingCopy(

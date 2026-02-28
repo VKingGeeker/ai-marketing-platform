@@ -205,6 +205,12 @@ npm run start:dev
 
 ## 🔄 更新日志
 
+### v2.1.0 (2026-02-28)
+- ✅ 真实AI接入 - 支持多AI服务商
+- ✅ AI服务商支持 - SiliconFlow / OpenAI / Moonshot
+- ✅ Prompt优化 - 适配中国中小商户营销场景
+- ✅ 内容安全 - 敏感词过滤
+
 ### v2.0.0 (2026-02-28)
 - ✅ 全栈化改造 - NestJS后端API
 - ✅ 用户系统 - 注册/登录/JWT认证

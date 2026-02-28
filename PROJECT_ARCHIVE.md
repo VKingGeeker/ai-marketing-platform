@@ -248,6 +248,33 @@ Failed to resolve import "../../composables/useStorage" from "src\views\FAQPage.
 
 ---
 
+## 阶段二开发记录（v2.1.0 真实AI接入）
+
+### 10. AI服务接入开发
+
+**负责人**: 后端架构师智能体 (backend-architect)
+
+**工作内容**:
+
+| 目录/文件 | 说明 |
+|----------|------|
+| server/src/config/ | 配置模块 |
+| server/src/modules/ai/interfaces/ | AI服务接口定义 |
+| server/src/modules/ai/services/siliconflow.service.ts | 硅基流动API |
+| server/src/modules/ai/services/openai.service.ts | OpenAI API |
+| server/src/modules/ai/services/moonshot.service.ts | 月之暗面API |
+| server/src/modules/ai/services/content-safety.service.ts | 内容安全检查 |
+| server/src/modules/ai/services/ai-provider-manager.service.ts | AI提供商管理 |
+| server/.env | 环境变量配置 |
+
+**核心功能**:
+1. ✅ 支持三种AI服务商无缝切换
+2. ✅ 优化Prompt适配中国中小商户
+3. ✅ 内容安全检查（敏感词过滤）
+4. ✅ 完善的错误处理和降级机制
+
+---
+
 ## 项目运行状态
 
 - **前端地址**: http://localhost:3001/
@@ -255,7 +282,7 @@ Failed to resolve import "../../composables/useStorage" from "src\views\FAQPage.
 - **运行状态**: ✅ 正常运行
 - **启动时间**: 2026-02-28
 - **GitHub**: https://github.com/VKingGeeker/ai-marketing-platform
-- **版本**: v2.0.0
+- **版本**: v2.1.0
 
 ---
 
