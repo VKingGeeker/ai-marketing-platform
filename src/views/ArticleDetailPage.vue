@@ -136,7 +136,7 @@ import {
   addComment,
   deleteComment as removeComment,
   initDefaultArticles
-} from '../../composables/useStorage'
+} from '../composables/useStorage'
 
 const router = useRouter()
 const route = useRoute()

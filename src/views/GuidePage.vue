@@ -270,7 +270,7 @@
 <script setup>
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
-import { submitFeedback as saveFeedback } from '../../composables/useStorage'
+import { submitFeedback as saveFeedback } from '../composables/useStorage'
 
 const showFeedbackDialog = ref(false)
 const feedbackForm = ref({

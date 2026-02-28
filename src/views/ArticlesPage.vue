@@ -71,7 +71,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { getArticles, initDefaultArticles } from '../../composables/useStorage'
+import { getArticles, initDefaultArticles } from '../composables/useStorage'
 
 const router = useRouter()
 const articles = ref([])

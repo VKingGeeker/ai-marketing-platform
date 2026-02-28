@@ -112,7 +112,7 @@
 import { ref, computed } from 'vue'
 import { ElMessage } from 'element-plus'
 import { Search } from '@element-plus/icons-vue'
-import { submitFeedback as saveFeedback } from '../../composables/useStorage'
+import { submitFeedback as saveFeedback } from '../composables/useStorage'
 
 const searchKeyword = ref('')
 const activeCategory = ref('')
