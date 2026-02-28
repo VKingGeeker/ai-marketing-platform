@@ -6,7 +6,9 @@ const STORAGE_KEYS = {
   FAVORITES: 'ai_marketing_favorites',
   ARTICLES: 'ai_marketing_articles',
   COMMENTS: 'ai_marketing_comments',
-  FEEDBACKS: 'ai_marketing_feedbacks'
+  FEEDBACKS: 'ai_marketing_feedbacks',
+  VIDEOS: 'ai_marketing_videos',
+  TOPICS: 'ai_marketing_topics'
 }
 
 // 解析 JSON，失败返回默认值
@@ -580,5 +582,273 @@ export function useStorage() {
     clearHistory,
     getHistory,
     getFavorites
+  }
+}
+
+// ============ 视频教程相关函数 ============
+
+// 获取视频列表
+export function getVideos() {
+  const data = localStorage.getItem(STORAGE_KEYS.VIDEOS)
+  return parseJSON(data, [])
+}
+
+// 保存视频列表
+export function saveVideos(videos) {
+  localStorage.setItem(STORAGE_KEYS.VIDEOS, JSON.stringify(videos))
+}
+
+// 获取单个视频
+export function getVideoById(id) {
+  const videos = getVideos()
+  return videos.find(video => video.id === id)
+}
+
+// 添加视频
+export function addVideo(video) {
+  const videos = getVideos()
+  const newVideo = {
+    id: generateId(),
+    createdAt: new Date().toISOString(),
+    views: 0,
+    ...video
+  }
+  videos.unshift(newVideo)
+  saveVideos(videos)
+  return newVideo
+}
+
+// 增加视频浏览量
+export function incrementVideoViewCount(id) {
+  const videos = getVideos()
+  const index = videos.findIndex(video => video.id === id)
+  if (index > -1) {
+    videos[index].views = (videos[index].views || 0) + 1
+    saveVideos(videos)
+    return videos[index]
+  }
+  return null
+}
+
+// ============ 讨论区话题相关函数 ============
+
+// 获取话题列表
+export function getTopics() {
+  const data = localStorage.getItem(STORAGE_KEYS.TOPICS)
+  return parseJSON(data, [])
+}
+
+// 保存话题列表
+export function saveTopics(topics) {
+  localStorage.setItem(STORAGE_KEYS.TOPICS, JSON.stringify(topics))
+}
+
+// 获取单个话题
+export function getTopicById(id) {
+  const topics = getTopics()
+  return topics.find(topic => topic.id === id)
+}
+
+// 添加话题
+export function addTopic(topic) {
+  const topics = getTopics()
+  const newTopic = {
+    id: generateId(),
+    createdAt: new Date().toISOString(),
+    voteCount: 0,
+    isVoted: false,
+    commentCount: 0,
+    viewCount: 0,
+    ...topic
+  }
+  topics.unshift(newTopic)
+  saveTopics(topics)
+  return newTopic
+}
+
+// 点赞话题
+export function voteTopic(id) {
+  const topics = getTopics()
+  const index = topics.findIndex(topic => topic.id === id)
+  if (index > -1) {
+    if (topics[index].isVoted) {
+      // 取消点赞
+      topics[index].voteCount = Math.max((topics[index].voteCount || 1) - 1, 0)
+      topics[index].isVoted = false
+    } else {
+      // 点赞
+      topics[index].voteCount = (topics[index].voteCount || 0) + 1
+      topics[index].isVoted = true
+    }
+    saveTopics(topics)
+  }
+  return topics
+}
+
+// 增加话题浏览量
+export function incrementTopicViewCount(id) {
+  const topics = getTopics()
+  const index = topics.findIndex(topic => topic.id === id)
+  if (index > -1) {
+    topics[index].viewCount = (topics[index].viewCount || 0) + 1
+    saveTopics(topics)
+    return topics[index]
+  }
+  return null
+}
+
+// ============ 初始化默认视频数据 ============
+
+// 初始化默认视频
+export function initDefaultVideos() {
+  const existingVideos = getVideos()
+  if (existingVideos.length === 0) {
+    const defaultVideos = [
+      {
+        id: 'video-1',
+        title: '新手入门：5分钟快速上手AI营销',
+        description: '本教程将带领新手商家快速了解AI营销工具的基本使用方法，包括如何选择内容类型、输入店铺信息、生成营销文案等基础操作。',
+        cover: 'https://picsum.photos/seed/video1/800/450',
+        duration: '05:32',
+        category: '入门教程',
+        views: 3256,
+        createdAt: '2024-01-20T10:00:00Z'
+      },
+      {
+        id: 'video-2',
+        title: '营销文案生成技巧深度解析',
+        description: '深入讲解如何通过优化输入信息获得更高质量的营销文案，包括关键词选择、场景描述、目标受众分析等技巧。',
+        cover: 'https://picsum.photos/seed/video2/800/450',
+        duration: '12:45',
+        category: '高级技巧',
+        views: 1843,
+        createdAt: '2024-01-18T14:30:00Z'
+      },
+      {
+        id: 'video-3',
+        title: '餐饮行业案例实战：火锅店营销',
+        description: '通过一个真实的火锅店营销案例，展示如何从零开始创建一套完整的营销方案，包括会员日活动、社交媒体推广等。',
+        cover: 'https://picsum.photos/seed/video3/800/450',
+        duration: '18:20',
+        category: '案例实战',
+        views: 2156,
+        createdAt: '2024-01-15T09:15:00Z'
+      },
+      {
+        id: 'video-4',
+        title: '社交媒体内容创作全攻略',
+        description: '全面讲解如何在微信、微博、抖音等平台创作吸引人的营销内容，包括内容策划、视觉设计、发布时间等策略。',
+        cover: 'https://picsum.photos/seed/video4/800/450',
+        duration: '22:10',
+        category: '高级技巧',
+        views: 1567,
+        createdAt: '2024-01-12T16:45:00Z'
+      },
+      {
+        id: 'video-5',
+        title: '零售店铺产品描述优化',
+        description: '手把手教你如何为电商平台和线下店铺写出让顾客心动的产品描述，提升转化率和客单价。',
+        cover: 'https://picsum.photos/seed/video5/800/450',
+        duration: '15:30',
+        category: '案例实战',
+        views: 1234,
+        createdAt: '2024-01-10T11:20:00Z'
+      },
+      {
+        id: 'video-6',
+        title: 'AI工具高级设置与自定义',
+        description: '介绍AI营销工具的高级功能，包括自定义模板、偏好设置、批量生成等高级操作技巧。',
+        cover: 'https://picsum.photos/seed/video6/800/450',
+        duration: '20:15',
+        category: '高级技巧',
+        views: 987,
+        createdAt: '2024-01-08T13:00:00Z'
+      }
+    ]
+    saveVideos(defaultVideos)
+  }
+}
+
+// ============ 初始化默认话题数据 ============
+
+// 初始化默认话题
+export function initDefaultTopics() {
+  const existingTopics = getTopics()
+  if (existingTopics.length === 0) {
+    const defaultTopics = [
+      {
+        id: 'topic-1',
+        title: '分享我的第一个AI营销文案 - 火锅店会员日',
+        content: '今天第一次使用AI营销工具，为我们店的会员日活动生成文案，效果出乎意料的好！生成的文案既专业又吸引人，会员日的客流比平时多了将近一倍。强烈推荐给各位餐饮同行！',
+        category: '经验分享',
+        author: '火锅店小张',
+        voteCount: 45,
+        isVoted: false,
+        commentCount: 12,
+        viewCount: 328,
+        createdAt: '2024-01-20T15:30:00Z'
+      },
+      {
+        id: 'topic-2',
+        title: '求助：如何让AI生成的文案更有个人特色？',
+        content: '最近刚开始用AI营销工具，生成的文案质量很好，但感觉缺少一些个人风格。有没有前辈可以分享一些技巧，让文案在专业的同时也能体现我们店铺的独特调性？',
+        category: '问题求助',
+        author: '咖啡店主小李',
+        voteCount: 28,
+        isVoted: false,
+        commentCount: 8,
+        viewCount: 156,
+        createdAt: '2024-01-19T10:20:00Z'
+      },
+      {
+        id: 'topic-3',
+        title: '互换资源：餐饮行业营销资料包',
+        content: '我整理了一套餐饮行业营销资料包，包含各类型餐饮的营销方案、节日活动策划、会员运营技巧等。有需要的朋友可以留言互换或免费分享给大家，一起进步！',
+        category: '资源互换',
+        author: '运营达人',
+        voteCount: 67,
+        isVoted: false,
+        commentCount: 23,
+        viewCount: 456,
+        createdAt: '2024-01-18T14:45:00Z'
+      },
+      {
+        id: 'topic-4',
+        title: '关于AI生成文案的版权问题讨论',
+        content: '想和大家讨论一下，使用AI生成的营销文案是否需要特别注意版权问题？有没有了解相关法规的朋友可以科普一下？',
+        category: '经验分享',
+        author: '法律爱好者',
+        voteCount: 34,
+        isVoted: false,
+        commentCount: 15,
+        viewCount: 289,
+        createdAt: '2024-01-17T09:10:00Z'
+      },
+      {
+        id: 'topic-5',
+        title: '新手求助：社交媒体内容怎么规划？',
+        content: '刚开店不久，想做好社交媒体营销，但每天发什么内容很头疼没有高手可以。有分享一套简单实用的内容规划方法？不需要太复杂， 能坚持执行就行。',
+        category: '问题求助',
+        author: '新手小白',
+        voteCount: 19,
+        isVoted: false,
+        commentCount: 6,
+        viewCount: 98,
+        createdAt: '2024-01-16T16:30:00Z'
+      },
+      {
+        id: 'topic-6',
+        title: '推荐一个超好用的配图素材网站',
+        content: '发现一个免费商用的图片素材网站，AI生成的文案配合高质量配图，效果翻倍！分享给需要的朋友们。',
+        category: '资源互换',
+        author: '设计小王',
+        voteCount: 52,
+        isVoted: false,
+        commentCount: 18,
+        viewCount: 412,
+        createdAt: '2024-01-15T11:20:00Z'
+      }
+    ]
+    saveTopics(defaultTopics)
   }
 }

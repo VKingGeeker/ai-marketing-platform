@@ -33,6 +33,18 @@
           <template #dropdown>
             <el-dropdown-menu>
               <el-dropdown-item>
+                <router-link to="/videos" class="dropdown-link">
+                  <el-icon><VideoCamera /></el-icon>
+                  <span>视频教程</span>
+                </router-link>
+              </el-dropdown-item>
+              <el-dropdown-item>
+                <router-link to="/community" class="dropdown-link">
+                  <el-icon><ChatDotRound /></el-icon>
+                  <span>讨论区</span>
+                </router-link>
+              </el-dropdown-item>
+              <el-dropdown-item divided>
                 <router-link to="/articles" class="dropdown-link">
                   <el-icon><Reading /></el-icon>
                   <span>行业资讯</span>

@@ -45,6 +45,16 @@ const routes = [
     path: '/faq',
     name: 'FAQ',
     component: () => import('../views/FAQPage.vue')
+  },
+  {
+    path: '/videos',
+    name: 'Videos',
+    component: () => import('../views/VideosPage.vue')
+  },
+  {
+    path: '/community',
+    name: 'Community',
+    component: () => import('../views/CommunityPage.vue')
   }
 ]
 

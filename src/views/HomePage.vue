@@ -25,6 +25,40 @@
             </div>
           </div>
         </div>
+        <!-- 数据可视化图表 -->
+        <div class="hero-chart">
+          <div class="chart-card">
+            <h4 class="chart-title">平台数据概览</h4>
+            <div class="chart-item">
+              <div class="chart-label">
+                <span>本月生成文案</span>
+                <span class="chart-value">12,450</span>
+              </div>
+              <el-progress :percentage="75" :stroke-width="8" :show-text="false" color="#4F46E5" />
+            </div>
+            <div class="chart-item">
+              <div class="chart-label">
+                <span>活跃商家</span>
+                <span class="chart-value">3,280</span>
+              </div>
+              <el-progress :percentage="65" :stroke-width="8" :show-text="false" color="#10B981" />
+            </div>
+            <div class="chart-item">
+              <div class="chart-label">
+                <span>收藏总数</span>
+                <span class="chart-value">8,920</span>
+              </div>
+              <el-progress :percentage="45" :stroke-width="8" :show-text="false" color="#F59E0B" />
+            </div>
+            <div class="chart-item">
+              <div class="chart-label">
+                <span>社区互动</span>
+                <span class="chart-value">5,640</span>
+              </div>
+              <el-progress :percentage="85" :stroke-width="8" :show-text="false" color="#EC4899" />
+            </div>
+          </div>
+        </div>
         <div class="hero-visual">
           <div class="floating-cards">
             <div class="float-card card-1">
@@ -194,6 +228,56 @@ import FeatureCard from '../components/cards/FeatureCard.vue'
   justify-content: center;
   position: relative;
   height: 300px;
+}
+
+/* 数据可视化图表 */
+.hero-chart {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  padding: 0 20px;
+}
+
+.chart-card {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  box-shadow: var(--shadow-md);
+  width: 100%;
+  max-width: 320px;
+}
+
+.chart-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--space-md);
+  text-align: center;
+}
+
+.chart-item {
+  margin-bottom: var(--space-md);
+}
+
+.chart-item:last-child {
+  margin-bottom: 0;
+}
+
+.chart-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+  font-size: 13px;
+}
+
+.chart-label span:first-child {
+  color: var(--text-secondary);
+}
+
+.chart-value {
+  font-weight: 600;
+  color: var(--text-primary);
 }
 
 .floating-cards {
@@ -366,6 +450,10 @@ import FeatureCard from '../components/cards/FeatureCard.vue'
 
   .advantages-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .hero-chart {
+    display: none;
   }
 }
 
