@@ -126,35 +126,53 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import {
-  getArticleById,
-  incrementViewCount,
-  getCommentsByArticleId,
-  addComment,
-  deleteComment as removeComment,
-  initDefaultArticles
-} from '../composables/useStorage'
+import { getArticleById as getArticleByIdAPI, getMockArticles } from '../api/articleApi'
+import { getArticleComments, createComment as createCommentAPI } from '../api/commentApi'
+import { useAuth } from '../composables/useAuth'
 
 const router = useRouter()
 const route = useRoute()
+const { user, isLoggedIn } = useAuth()
 
 const article = ref(null)
 const comments = ref([])
 const newComment = ref('')
-const currentUser = ref('游客用户')
+const loading = ref(false)
 
-const isLoggedIn = computed(() => true)
+const loadArticle = async () => {
+  loading.value = true
+  try {
+    const articleId = route.params.id
 
-const loadArticle = () => {
-  const articleId = route.params.id
-  article.value = getArticleById(articleId)
+    // 先尝试从 API 获取
+    try {
+      article.value = await getArticleByIdAPI(articleId)
+    } catch {
+      // 如果 API 失败，使用 mock 数据
+      const mockData = await getMockArticles()
+      article.value = mockData.find(a => a.id === parseInt(articleId)) || mockData[0]
+    }
 
-  if (article.value) {
-    incrementViewCount(articleId)
-    comments.value = getCommentsByArticleId(articleId)
+    if (article.value) {
+      // 加载评论
+      loadComments(articleId)
+    }
+  } catch (error) {
+    ElMessage.error('加载文章失败')
+  } finally {
+    loading.value = false
+  }
+}
+
+const loadComments = async (articleId) => {
+  try {
+    const res = await getArticleComments(articleId)
+    comments.value = res.comments || []
+  } catch {
+    comments.value = []
   }
 }
 
@@ -163,6 +181,7 @@ const goBack = () => {
 }
 
 const formatDate = (dateStr) => {
+  if (!dateStr) return ''
   const date = new Date(dateStr)
   return date.toLocaleDateString('zh-CN', {
     year: 'numeric',
@@ -172,6 +191,7 @@ const formatDate = (dateStr) => {
 }
 
 const formatCommentTime = (dateStr) => {
+  if (!dateStr) return ''
   const date = new Date(dateStr)
   const now = new Date()
   const diff = now - date
@@ -192,22 +212,26 @@ const getAvatarColor = (name) => {
   return colors[index]
 }
 
-const submitComment = () => {
+const submitComment = async () => {
   if (!newComment.value.trim()) return
 
-  addComment({
-    articleId: article.value.id,
-    author: currentUser.value,
-    content: newComment.value.trim()
-  })
+  try {
+    await createCommentAPI({
+      articleId: parseInt(route.params.id),
+      content: newComment.value.trim()
+    })
 
-  comments.value = getCommentsByArticleId(article.value.id)
-  newComment.value = ''
-  ElMessage.success('评论发表成功！')
+    // 刷新评论列表
+    await loadComments(route.params.id)
+    newComment.value = ''
+    ElMessage.success('评论发表成功！')
+  } catch (error) {
+    ElMessage.error(error || '评论发表失败，请先登录')
+  }
 }
 
 const canDeleteComment = (comment) => {
-  return comment.author === currentUser.value
+  return isLoggedIn.value && user.value && comment.author === user.value.nickname
 }
 
 const handleDeleteComment = async (commentId) => {
@@ -218,7 +242,7 @@ const handleDeleteComment = async (commentId) => {
       type: 'warning'
     })
 
-    removeComment(commentId)
+    // TODO: 添加删除评论 API
     comments.value = comments.value.filter(c => c.id !== commentId)
     ElMessage.success('评论已删除')
   } catch {
@@ -227,7 +251,6 @@ const handleDeleteComment = async (commentId) => {
 }
 
 onMounted(() => {
-  initDefaultArticles()
   loadArticle()
 })
 </script>

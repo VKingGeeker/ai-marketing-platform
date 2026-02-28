@@ -198,6 +198,7 @@ import { ref, reactive } from 'vue'
 import { ElMessage } from 'element-plus'
 import { EditPen } from '@element-plus/icons-vue'
 import { addHistory, getFavorites, addFavorite, removeFavorite } from '../composables/useStorage'
+import { generateSocialContent } from '../api/aiApi'
 
 // 表单数据
 const formRef = ref(null)
@@ -260,24 +261,33 @@ const handleSubmit = async () => {
   loading.value = true
   results.value = {}
 
-  // 模拟 AI 生成延迟
-  await new Promise(resolve => setTimeout(resolve, 1500))
+  try {
+    // 为每个平台调用后端 API
+    for (const platform of formData.platforms) {
+      const res = await generateSocialContent({
+        platform: platform,
+        topic: formData.contentTheme,
+        style: formData.contentStyle,
+        count: 3
+      })
 
-  // 为每个平台生成内容
-  formData.platforms.forEach(platform => {
-    results.value[platform] = generateTemplates(platform)
-  })
+      results.value[platform] = res.contents || []
+    }
 
-  // 保存到历史记录
-  addHistory({
-    type: 'social',
-    title: formData.contentTheme,
-    inputs: { ...formData },
-    results: results.value
-  })
+    // 保存到本地历史记录
+    addHistory({
+      type: 'social',
+      title: formData.contentTheme,
+      inputs: { ...formData },
+      results: results.value
+    })
 
-  loading.value = false
-  ElMessage.success('生成成功！')
+    ElMessage.success('生成成功！')
+  } catch (error) {
+    ElMessage.error(error || '生成失败，请稍后重试')
+  } finally {
+    loading.value = false
+  }
 }
 
 // 生成文案模板

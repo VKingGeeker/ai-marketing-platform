@@ -172,6 +172,7 @@ import { ref, reactive } from 'vue'
 import { ElMessage } from 'element-plus'
 import { Shop } from '@element-plus/icons-vue'
 import { addHistory, getFavorites, addFavorite, removeFavorite } from '../composables/useStorage'
+import { generateMarketingCopy } from '../api/aiApi'
 
 // 表单数据
 const formRef = ref(null)
@@ -224,23 +225,32 @@ const handleSubmit = async () => {
   loading.value = true
   results.value = []
 
-  // 模拟 AI 生成延迟
-  await new Promise(resolve => setTimeout(resolve, 1500))
+  try {
+    // 调用后端 API
+    const res = await generateMarketingCopy({
+      product: formData.shopName,
+      targetAudience: formData.businessType,
+      tone: formData.copyStyle,
+      length: formData.marketingTheme
+    })
 
-  // 生成模拟文案
-  const templates = generateTemplates()
-  results.value = templates
+    // 处理返回结果
+    results.value = res.copies || []
 
-  // 保存到历史记录
-  addHistory({
-    type: 'marketing',
-    title: formData.shopName,
-    inputs: { ...formData },
-    results: templates
-  })
+    // 保存到本地历史记录
+    addHistory({
+      type: 'marketing',
+      title: formData.shopName,
+      inputs: { ...formData },
+      results: results.value
+    })
 
-  loading.value = false
-  ElMessage.success('生成成功！')
+    ElMessage.success('生成成功！')
+  } catch (error) {
+    ElMessage.error(error || '生成失败，请稍后重试')
+  } finally {
+    loading.value = false
+  }
 }
 
 // 生成文案模板

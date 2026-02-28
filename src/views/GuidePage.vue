@@ -229,9 +229,9 @@
             <h2>有问题？提建议？</h2>
             <p>我们重视每一位用户的反馈，不断优化产品体验</p>
           </div>
-          <el-button type="primary" size="large" @click="showFeedbackDialog = true">
+          <el-button type="primary" size="large" @click="showFeedbackDialog = true" :disabled="!isLoggedIn">
             <el-icon><Message /></el-icon>
-            提交反馈
+            {{ isLoggedIn ? '提交反馈' : '登录后提交反馈' }}
           </el-button>
         </div>
       </section>
@@ -260,7 +260,7 @@
         </el-form>
         <template #footer>
           <el-button @click="showFeedbackDialog = false">取消</el-button>
-          <el-button type="primary" @click="submitFeedback">提交</el-button>
+          <el-button type="primary" @click="submitFeedback" :loading="submitting">提交</el-button>
         </template>
       </el-dialog>
     </div>
@@ -270,7 +270,10 @@
 <script setup>
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
-import { submitFeedback as saveFeedback } from '../composables/useStorage'
+import { createFeedback } from '../api/feedbackApi'
+import { useAuth } from '../composables/useAuth'
+
+const { isLoggedIn } = useAuth()
 
 const showFeedbackDialog = ref(false)
 const feedbackForm = ref({
@@ -278,6 +281,7 @@ const feedbackForm = ref({
   content: '',
   contact: ''
 })
+const submitting = ref(false)
 
 const quickNavItems = [
   { id: 'marketing', title: '营销文案', icon: 'Document' },
@@ -294,16 +298,34 @@ const scrollToSection = (id) => {
   }
 }
 
-const submitFeedback = () => {
+const submitFeedback = async () => {
   if (!feedbackForm.value.type || !feedbackForm.value.content) {
     ElMessage.warning('请填写反馈类型和内容')
     return
   }
 
-  saveFeedback(feedbackForm.value)
-  ElMessage.success('感谢您的反馈！')
-  showFeedbackDialog.value = false
-  feedbackForm.value = { type: '', content: '', contact: '' }
+  if (!isLoggedIn.value) {
+    ElMessage.warning('请先登录后再提交反馈')
+    return
+  }
+
+  submitting.value = true
+
+  try {
+    await createFeedback({
+      type: feedbackForm.value.type,
+      content: feedbackForm.value.content,
+      contact: feedbackForm.value.contact || undefined
+    })
+
+    ElMessage.success('感谢您的反馈！')
+    showFeedbackDialog.value = false
+    feedbackForm.value = { type: '', content: '', contact: '' }
+  } catch (error) {
+    ElMessage.error(error || '提交失败，请稍后重试')
+  } finally {
+    submitting.value = false
+  }
 }
 </script>
 

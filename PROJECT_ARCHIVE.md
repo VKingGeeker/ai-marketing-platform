@@ -193,13 +193,69 @@ Failed to resolve import "../../composables/useStorage" from "src\views\FAQPage.
 
 ---
 
+## 阶段一开发记录（v2.0.0 全栈化改造）
+
+### 8. 后端API服务开发
+
+**负责人**: 后端架构师智能体 (backend-architect)
+
+**工作内容**:
+
+| 目录/文件 | 说明 |
+|----------|------|
+| server/src/main.ts | 应用入口 |
+| server/src/app.module.ts | 根模块 |
+| server/src/modules/auth/ | 认证模块（注册/登录/JWT） |
+| server/src/modules/user/ | 用户模块 |
+| server/src/modules/content/ | 内容模块（文章/评论API） |
+| server/src/modules/ai/ | AI生成模块 |
+| server/src/modules/feedback/ | 反馈模块 |
+| server/prisma/schema.prisma | 数据库模型 |
+
+**核心功能**:
+1. ✅ NestJS + TypeScript 后端框架
+2. ✅ Prisma ORM + SQLite 数据库
+3. ✅ JWT 用户认证
+4. ✅ RESTful API 接口
+5. ✅ CORS 跨域配置
+
+---
+
+### 9. 前端API对接开发
+
+**负责人**: 前端架构师智能体 (frontend-architect)
+
+**工作内容**:
+
+| 目录/文件 | 说明 |
+|----------|------|
+| src/api/request.js | axios 封装 + 拦截器 |
+| src/api/authApi.js | 登录/注册接口 |
+| src/api/userApi.js | 用户信息接口 |
+| src/api/articleApi.js | 文章接口 |
+| src/api/commentApi.js | 评论接口 |
+| src/api/aiApi.js | AI生成接口 |
+| src/api/feedbackApi.js | 反馈接口 |
+| src/composables/useAuth.js | 认证状态管理 |
+| src/views/LoginPage.vue | 登录页面 |
+| src/views/RegisterPage.vue | 注册页面 |
+
+**核心功能**:
+1. ✅ API请求封装
+2. ✅ JWT token 管理
+3. ✅ 登录/注册页面
+4. ✅ 路由权限守卫
+
+---
+
 ## 项目运行状态
 
-- **访问地址**: http://localhost:3001/
+- **前端地址**: http://localhost:3001/
+- **后端API**: http://localhost:3000/api
 - **运行状态**: ✅ 正常运行
 - **启动时间**: 2026-02-28
 - **GitHub**: https://github.com/VKingGeeker/ai-marketing-platform
-- **版本**: v1.2.0
+- **版本**: v2.0.0
 
 ---
 

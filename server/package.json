@@ -1,0 +1,40 @@
+{
+  "name": "zhixiang-ai-server",
+  "version": "1.0.0",
+  "description": "智享AI平台后端API服务",
+  "scripts": {
+    "build": "nest build",
+    "start": "nest start",
+    "start:dev": "nest start --watch",
+    "start:prod": "node dist/main",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:studio": "prisma studio"
+  },
+  "dependencies": {
+    "@nestjs/common": "^9.4.3",
+    "@nestjs/core": "^9.4.3",
+    "@nestjs/jwt": "^10.1.0",
+    "@nestjs/passport": "^9.0.3",
+    "@nestjs/platform-express": "^9.4.3",
+    "@prisma/client": "^4.17.0",
+    "bcryptjs": "^2.4.3",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.0",
+    "passport": "^0.6.0",
+    "passport-jwt": "^4.0.1",
+    "reflect-metadata": "^0.1.13",
+    "rxjs": "^7.8.1"
+  },
+  "devDependencies": {
+    "@nestjs/cli": "^9.4.3",
+    "@nestjs/schematics": "^9.2.0",
+    "@types/bcryptjs": "^2.4.2",
+    "@types/express": "^4.17.17",
+    "@types/node": "^18.16.3",
+    "@types/passport-jwt": "^3.0.8",
+    "prisma": "^4.17.0",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.1.3"
+  }
+}

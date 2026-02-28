@@ -130,7 +130,15 @@ npm run build
 
 ```
 ai-marketing-platform/
-├── src/
+├── src/                      # 前端源码
+│   ├── api/                  # API请求封装
+│   │   ├── request.js
+│   │   ├── authApi.js
+│   │   ├── userApi.js
+│   │   ├── articleApi.js
+│   │   ├── commentApi.js
+│   │   ├── aiApi.js
+│   │   └── feedbackApi.js
 │   ├── assets/
 │   │   └── styles/
 │   │       └── main.css
@@ -140,28 +148,69 @@ ai-marketing-platform/
 │   │   └── layout/
 │   │       └── AppHeader.vue
 │   ├── composables/
-│   │   └── useStorage.js
+│   │   ├── useStorage.js
+│   │   └── useAuth.js
 │   ├── router/
 │   │   └── index.js
-│   ├── views/
-│   │   ├── HomePage.vue
-│   │   ├── MarketingCopyPage.vue
-│   │   ├── ProductDescPage.vue
-│   │   ├── SocialMediaPage.vue
-│   │   ├── HistoryPage.vue
-│   │   ├── ArticlesPage.vue
-│   │   ├── ArticleDetailPage.vue
-│   │   ├── GuidePage.vue
-│   │   └── FAQPage.vue
-│   ├── App.vue
-│   └── main.js
+│   └── views/
+│       ├── HomePage.vue
+│       ├── LoginPage.vue
+│       ├── RegisterPage.vue
+│       ├── MarketingCopyPage.vue
+│       ├── ProductDescPage.vue
+│       ├── SocialMediaPage.vue
+│       ├── HistoryPage.vue
+│       ├── ArticlesPage.vue
+│       ├── ArticleDetailPage.vue
+│       ├── VideosPage.vue
+│       ├── CommunityPage.vue
+│       ├── GuidePage.vue
+│       └── FAQPage.vue
+├── server/                   # 后端源码
+│   ├── src/
+│   │   ├── modules/
+│   │   │   ├── auth/        # 认证模块
+│   │   │   ├── user/        # 用户模块
+│   │   │   ├── content/     # 内容模块
+│   │   │   ├── ai/          # AI生成模块
+│   │   │   └── feedback/    # 反馈模块
+│   │   └── database/        # 数据库
+│   ├── prisma/
+│   │   └── schema.prisma   # 数据模型
+│   └── package.json
 ├── index.html
 ├── package.json
 ├── vite.config.js
 └── README.md
 ```
 
+## 🚀 启动指南
+
+### 前端
+```bash
+npm install
+npm run dev
+# 访问 http://localhost:3001
+```
+
+### 后端
+```bash
+cd server
+npm install
+npx prisma generate
+npx prisma migrate dev --name init
+npm run start:dev
+# API运行在 http://localhost:3000/api
+```
+
 ## 🔄 更新日志
+
+### v2.0.0 (2026-02-28)
+- ✅ 全栈化改造 - NestJS后端API
+- ✅ 用户系统 - 注册/登录/JWT认证
+- ✅ 数据库持久化 - Prisma ORM + SQLite
+- ✅ 前端API对接 - axios封装
+- ✅ 路由保护 - 登录权限控制
 
 ### v1.2.0 (2026-02-28)
 - ✅ 新增视频教程中心

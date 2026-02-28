@@ -79,18 +79,64 @@
             <el-icon><Clock /></el-icon>
           </el-button>
         </el-badge>
+
+        <!-- 已登录用户显示 -->
+        <template v-if="isLoggedIn">
+          <el-dropdown trigger="hover" class="user-dropdown">
+            <div class="user-info">
+              <el-avatar :size="32" :src="user?.avatar">
+                {{ user?.nickname?.charAt(0) || 'U' }}
+              </el-avatar>
+              <span class="username">{{ user?.nickname || user?.email }}</span>
+            </div>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item @click="handleLogout">
+                  <el-icon><SwitchButton /></el-icon>
+                  <span>退出登录</span>
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
+        </template>
+
+        <!-- 未登录显示登录按钮 -->
+        <template v-else>
+          <el-button type="primary" size="small" @click="$router.push('/login')">
+            登录
+          </el-button>
+          <el-button size="small" @click="$router.push('/register')">
+            注册
+          </el-button>
+        </template>
       </div>
     </div>
   </header>
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { getHistory } from '../../composables/useStorage'
+import { useAuth } from '../../composables/useAuth'
+
+const router = useRouter()
+const { user, isLoggedIn, logout, initAuth } = useAuth()
 
 const historyCount = computed(() => {
   return getHistory().length
 })
+
+// 初始化认证状态
+onMounted(() => {
+  initAuth()
+})
+
+// 退出登录
+const handleLogout = () => {
+  logout()
+  router.push('/login')
+}
 </script>
 
 <style scoped>
@@ -196,6 +242,33 @@ const historyCount = computed(() => {
 
 .history-badge :deep(.el-badge__content) {
   background: var(--accent-color);
+}
+
+.user-dropdown {
+  margin-left: var(--space-md);
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: var(--radius-md);
+  transition: background var(--transition);
+}
+
+.user-info:hover {
+  background: var(--primary-light);
+}
+
+.username {
+  font-size: 14px;
+  color: var(--text-primary);
+  max-width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 @media (max-width: 768px) {

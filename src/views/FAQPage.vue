@@ -55,8 +55,8 @@
       <div class="no-result" v-if="filteredFAQs.length === 0">
         <el-icon :size="48"><QuestionFilled /></el-icon>
         <p>没有找到相关问题</p>
-        <el-button type="primary" @click="showFeedbackDialog = true">
-          提交问题
+        <el-button type="primary" @click="showFeedbackDialog = true" :disabled="!isLoggedIn">
+          {{ isLoggedIn ? '提交问题' : '登录后提交' }}
         </el-button>
       </div>
 
@@ -68,9 +68,9 @@
             <p>联系我们的客服团队，获取一对一帮助</p>
           </div>
           <div class="contact-actions">
-            <el-button type="primary" @click="showFeedbackDialog = true">
+            <el-button type="primary" @click="showFeedbackDialog = true" :disabled="!isLoggedIn">
               <el-icon><Message /></el-icon>
-              提交问题
+              {{ isLoggedIn ? '提交问题' : '登录后提交' }}
             </el-button>
           </div>
         </div>
@@ -101,7 +101,7 @@
         </el-form>
         <template #footer>
           <el-button @click="showFeedbackDialog = false">取消</el-button>
-          <el-button type="primary" @click="submitFeedback">提交</el-button>
+          <el-button type="primary" @click="submitFeedback" :loading="submitting">提交</el-button>
         </template>
       </el-dialog>
     </div>
@@ -112,7 +112,10 @@
 import { ref, computed } from 'vue'
 import { ElMessage } from 'element-plus'
 import { Search } from '@element-plus/icons-vue'
-import { submitFeedback as saveFeedback } from '../composables/useStorage'
+import { createFeedback } from '../api/feedbackApi'
+import { useAuth } from '../composables/useAuth'
+
+const { isLoggedIn } = useAuth()
 
 const searchKeyword = ref('')
 const activeCategory = ref('')
@@ -123,6 +126,7 @@ const feedbackForm = ref({
   content: '',
   contact: ''
 })
+const submitting = ref(false)
 
 const faqs = ref([
   {
@@ -216,16 +220,34 @@ const toggleAnswer = (index) => {
   expandedIndex.value = expandedIndex.value === index ? -1 : index
 }
 
-const submitFeedback = () => {
+const submitFeedback = async () => {
   if (!feedbackForm.value.type || !feedbackForm.value.content) {
     ElMessage.warning('请填写问题类型和问题描述')
     return
   }
 
-  saveFeedback(feedbackForm.value)
-  ElMessage.success('感谢您的提交！我们会尽快回复您')
-  showFeedbackDialog.value = false
-  feedbackForm.value = { type: '', content: '', contact: '' }
+  if (!isLoggedIn.value) {
+    ElMessage.warning('请先登录后再提交问题')
+    return
+  }
+
+  submitting.value = true
+
+  try {
+    await createFeedback({
+      type: feedbackForm.value.type,
+      content: feedbackForm.value.content,
+      contact: feedbackForm.value.contact || undefined
+    })
+
+    ElMessage.success('感谢您的提交！我们会尽快回复您')
+    showFeedbackDialog.value = false
+    feedbackForm.value = { type: '', content: '', contact: '' }
+  } catch (error) {
+    ElMessage.error(error || '提交失败，请稍后重试')
+  } finally {
+    submitting.value = false
+  }
 }
 </script>
 
