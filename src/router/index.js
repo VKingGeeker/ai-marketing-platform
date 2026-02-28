@@ -25,6 +25,26 @@ const routes = [
     path: '/history',
     name: 'History',
     component: () => import('../views/HistoryPage.vue')
+  },
+  {
+    path: '/articles',
+    name: 'Articles',
+    component: () => import('../views/ArticlesPage.vue')
+  },
+  {
+    path: '/article/:id',
+    name: 'ArticleDetail',
+    component: () => import('../views/ArticleDetailPage.vue')
+  },
+  {
+    path: '/guide',
+    name: 'Guide',
+    component: () => import('../views/GuidePage.vue')
+  },
+  {
+    path: '/faq',
+    name: 'FAQ',
+    component: () => import('../views/FAQPage.vue')
   }
 ]
 

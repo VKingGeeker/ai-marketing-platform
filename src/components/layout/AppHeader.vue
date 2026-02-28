@@ -25,10 +25,40 @@
           <el-icon><Connection /></el-icon>
           <span>社交媒体</span>
         </router-link>
-        <router-link to="/history" class="nav-item" :class="{ active: $route.path === '/history' }">
-          <el-icon><Clock /></el-icon>
-          <span>历史记录</span>
-        </router-link>
+        <el-dropdown trigger="hover" class="nav-dropdown">
+          <span class="nav-item">
+            <el-icon><MoreFilled /></el-icon>
+            <span>更多</span>
+          </span>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item>
+                <router-link to="/articles" class="dropdown-link">
+                  <el-icon><Reading /></el-icon>
+                  <span>行业资讯</span>
+                </router-link>
+              </el-dropdown-item>
+              <el-dropdown-item>
+                <router-link to="/guide" class="dropdown-link">
+                  <el-icon><Guide /></el-icon>
+                  <span>使用指南</span>
+                </router-link>
+              </el-dropdown-item>
+              <el-dropdown-item>
+                <router-link to="/faq" class="dropdown-link">
+                  <el-icon><QuestionFilled /></el-icon>
+                  <span>常见问题</span>
+                </router-link>
+              </el-dropdown-item>
+              <el-dropdown-item>
+                <router-link to="/history" class="dropdown-link">
+                  <el-icon><Clock /></el-icon>
+                  <span>历史记录</span>
+                </router-link>
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
       </nav>
 
       <div class="header-right">
@@ -113,6 +143,7 @@ const historyCount = computed(() => {
   font-size: 14px;
   font-weight: 500;
   transition: all var(--transition);
+  cursor: pointer;
 }
 
 .nav-item:hover {
@@ -127,6 +158,24 @@ const historyCount = computed(() => {
 
 .nav-item .el-icon {
   font-size: 16px;
+}
+
+.nav-dropdown {
+  display: flex;
+  align-items: center;
+}
+
+.dropdown-link {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  text-decoration: none;
+  color: var(--text-primary);
+  width: 100%;
+}
+
+.dropdown-link:hover {
+  color: var(--primary-color);
 }
 
 .header-right {
