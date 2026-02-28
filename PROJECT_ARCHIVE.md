@@ -128,11 +128,78 @@ from "src\components\layout\AppHeader.vue"
 
 ---
 
+## 第二阶段开发记录（v1.2.0）
+
+### 5. 媒体平台转型开发（2026-02-28）
+
+**负责人**: 前端架构师智能体 (frontend-architect)
+
+**工作内容**:
+
+| 文件 | 说明 |
+|------|------|
+| src/views/ArticlesPage.vue | 行业资讯列表页 |
+| src/views/ArticleDetailPage.vue | 文章详情页（含评论） |
+| src/views/GuidePage.vue | 使用指南页面 |
+| src/views/FAQPage.vue | 常见问题页面 |
+| src/composables/useStorage.js | 扩展存储（文章、评论、反馈） |
+
+**核心功能**:
+1. ✅ 行业资讯模块 - 6篇预置文章
+2. ✅ 文章评论系统 - 查看、发布、删除
+3. ✅ 使用指南 - 图文教程+反馈表单
+4. ✅ FAQ常见问题 - 搜索+分类
+
+---
+
+### 6. Bug修复（2026-02-28）
+
+**负责人**: 总裁（Agent模式）
+
+**问题描述**:
+- 多个页面import路径错误
+
+**错误信息**:
+```
+Failed to resolve import "../../composables/useStorage" from "src\views\FAQPage.vue"
+```
+
+**修复方案**:
+- 修正4个文件的import路径
+- FAQPage.vue
+- GuidePage.vue
+- ArticleDetailPage.vue
+- ArticlesPage.vue
+
+---
+
+### 7. 第二阶段扩展开发（2026-02-28）
+
+**负责人**: 前端架构师智能体 (frontend-architect)
+
+**工作内容**:
+
+| 文件 | 说明 |
+|------|------|
+| src/views/VideosPage.vue | 视频教程中心 |
+| src/views/CommunityPage.vue | 社区讨论区 |
+| src/views/HomePage.vue | 更新首页（数据可视化） |
+| src/composables/useStorage.js | 扩展存储（视频、话题） |
+
+**核心功能**:
+1. ✅ 视频教程中心 - 列表+分类+模拟播放
+2. ✅ 社区讨论区 - 话题+发布+点赞
+3. ✅ 首页数据可视化
+
+---
+
 ## 项目运行状态
 
 - **访问地址**: http://localhost:3001/
 - **运行状态**: ✅ 正常运行
 - **启动时间**: 2026-02-28
+- **GitHub**: https://github.com/VKingGeeker/ai-marketing-platform
+- **版本**: v1.2.0
 
 ---
 
